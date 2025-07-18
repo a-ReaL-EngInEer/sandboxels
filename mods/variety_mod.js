@@ -18,6 +18,7 @@
 //update 16: Fruit and Flies
 //update 17: Mold
 //update 18: Updated Flies!
+//update 19: Eat It!
 
 elements.moss = {
     //debut: update 2
@@ -300,6 +301,7 @@ elements.banana = {
 	category: "variety_mod",
     breakInto:["mashed_banana","juice"],
     breakIntoColor: "#D4A930",
+    isFood: true,
 	state: "solid",
 	reactions: {
 		"dirty_water": { elem1: "rotten_banana" },
@@ -310,9 +312,10 @@ elements.mashed_banana = {
     //debut:update 16
 	color: ["#FCE47D","#D4A930"],
 	excludeRandom: false,
-	behavior: [["XX","CR:juice%0.01","XX"],["ST%75","Ch:mold%0.015","ST%75"],["M1","M1","M1"]],
+	behavior: [["XX","CR:juice%0.01","XX"],["ST%75 AND M1%20","Ch:mold%0.015","ST%75 AND M1%20"],["M1","M1","M1"]],
 	category: "variety_mod",
 	state: "solid",
+    isFood:true,
     reactions: {
         "yogurt": { elem1: "yogurt" },
         "milk": {elem1: "fruit_milk"},
@@ -327,6 +330,7 @@ elements.rotten_banana = {
 	category: "variety_mod",
     breakInto:"mashed_banana",
 	state: "solid",
+    isFood:true,
 	reactions: {
 		"disinfectant": { elem1: "mold" },
         "worm": { elem1: "dirt", elem2: "mold"},
