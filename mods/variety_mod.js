@@ -3,7 +3,7 @@
 //update 2: Moss Update
 //update 3: hello_world
 //Update 4: Fly Update
-//update 5: Maggots and Eggs Update
+//update 5: fly_larvas and Eggs Update
 //update 6: Disinfectant Update
 //update 7: hello_world_2
 //update 8: Infested Meat Update (scrapped)
@@ -45,21 +45,25 @@ elements.hello_world = {
 	category: "land",
 	state: "solid",
 	reactions: {
-		"water": { elem1: "male_fly", elem2: "female_fly", elem3: "fly_egg", elem4: "maggot" },
+		"water": { elem1: "male_fly", elem2: "female_fly", elem3: "fly_egg", elem4: "fly_larva" },
 	}
 },
 
 elements.female_fly = {
 	//debut: update 4
+    alias: "Musca Domestica",
     color: "#4B4B4B",
 	excludeRandom: false,
-	behavior: [["M1%20","XX","M1%20"],["M1%20","CH:female_fly>dead_fly%0.01","M1%20"],["M1%20","CR:fly_egg%0.06","M1%20"]],
+	behavior: [["M1%20 AND ST:web","XX","M1%20 AND ST:web"],["M1%20 AND ST:web","CH:female_fly>dead_fly%0.01","M1%20 AND ST:web"],["M1%20 AND ST:web","CR:fly_egg%0.06 AND ST:web","M1%20 AND ST:web"]],
 	category: "variety_mod",
 	state: "solid",
 	breakInto: "dead_fly",
 	reactions: {
 		"disinfectant": { elem1: "dead_fly", elem2: "ammonia", elem3: "stench"},
 	},
+    burn: .01,
+    burnTime: 150,
+    burnInto: ["dead_fly","dirt"],
 	tempHigh: 100,
 	stateHigh:"dead_fly",
 	tempLow: 10,
@@ -68,11 +72,17 @@ elements.female_fly = {
 
 elements.male_fly = {
 	//debut: update 14
+    alias: "Musca Domestica",
     color: "#4B4B4B",
 	excludeRandom: false,
-	behavior: [["M1","M2","M1"],["M2","CH:dead_fly%0.01","M2"],["M1","M2","M1"]],
+	behavior: [["M1 AND ST:web","M2 AND ST:web","M1 AND ST:web"],["M2 AND ST:web","CH:dead_fly%0.01","M2 AND ST:web"],["M1 AND ST:web","M2 AND ST:web","M1 AND ST:web"]],
 	category: "variety_mod",
+    breakInto:"slime",
+    breakIntoColor: "#D4A930",
 	state: "solid",
+    burn: .01,
+    burnTime: 150,
+    burnInto: ["dead_fly","dirt"],
 	reactions: {
 		"disinfectant": { elem1: "dead_fly", elem2: "dead_fly"},
 	}
@@ -82,35 +92,40 @@ elements.fly_egg = {
 	//debut: update 5
     color: "#E2EAF4",
 	excludeRandom: false,
-	behavior: [["XX","ST","XX"],["ST","CH:maggot%0.036","ST"],["M1","M1 AND ST","M1"]],
+	behavior: [["XX","ST","XX"],["ST","CH:fly_larva%0.036","ST"],["M1","M1 AND ST","M1"]],
 	category: "variety_mod",
 	state: "solid",
-	breakInto: "slime,maggot,female_fly",
+	breakInto: ["slime","fly_larva","female_fly"],
 		reactions: {
 		"disinfectant": { elem1: "dead_fly", elem2: "ammonia", elem3: "stench"},
-		"growth_Fluid": { elem1: "maggot", elem2: "female_fly", elem3: "female_fly"}
+		"growth_Serum": { elem1: "fly_larva", elem2: "female_fly", elem3: "female_fly"}
 	}
 },
 
-elements.maggot = {
+elements.fly_larva = {
 	//debut:update 16
     color: "#F0EEE8",
+    alias: "Musca Domestica Larva",
 	excludeRandom: false,
-	behavior: [["M2%10 AND SA%50","SA%50 AND SW: maggot,fly_egg,meat,rotten_meat,cooked_meat","M2%10 AND SA%50"],["M2%50 AND CH:meat,rotten_meat,cooked_meat,cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,garbage_juice,banana,mashed_banana,rotten_banana>stench,stench,stench,plague%0.1","CC: #F9E6D4%0.08 AND CH:fly_pupa%0.05,CR:stench%10","M2%50 AND CH:meat,rotten_meat,cooked_meat,cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,banana,mashed_banana,rotten_banana>stench,plaque%0.1"],["M1 AND CH:meat>rotten_meat%1","M1 AND CH:meat,rotten_meat,cooked_meat,cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,>stench,plaque AND CH:cheese,cheese_powder,melted_cheese>rotten_cheese","M1"]],
+	behavior: [["M2%10 AND SA%50","SA%50 AND SW: fly_larva,fly_egg,meat,rotten_meat,cooked_meat%0.1","M2%10 AND SA%50"],["M2%50 AND CH:meat,rotten_meat,cooked_meat,cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,garbage_juice,banana,mashed_banana,rotten_banana>stench,stench,stench,plague%0.1","CC: #F9E6D4%0.08 AND CH:fly_pupae%0.05,CR:stench%10","M2%50 AND CH:meat,rotten_meat,cooked_meat,cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,banana,mashed_banana,rotten_banana>stench,plaque%0.1"],["M1 AND CH:meat>rotten_meat%1","M1 AND CH:meat,rotten_meat,cooked_meat,cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,>stench,plaque AND CH:cheese,cheese_powder,melted_cheese>rotten_cheese","M1"]],
 	category: "variety_mod",
 	state: "solid",
 	breakInto: "slime",
+    breakIntoColor: "#f1efe9",
 	tempHigh: 80,
 	stateHigh: "female_fly",
 	reactions: {
 		"disinfectant": { elem1: "stench", elem2: "ammonia", elem3: "stench"},
-		"growth_Fluid": {elem1: "female_fly", elem2: "female_fly"}
+		"growth_Serum": {elem1: "female_fly", elem2: "female_fly"}
 	}
 },
 
-elements.fly_pupa = {
+elements.fly_pupae = {
     //debut:update 18
+    alias: "Musca Domestica pupae",
 	color: "#B1834D",
+    breakInto:"slime",
+    breakIntoColor: "#D4A930",
 	excludeRandom: false,
 	behavior: [["XX","SP","XX"],["SP","CH:crawl_fly%0.006 AND CC:#5D5247%0.01","SP"],["M1","M1","M1"]],
 	category: "variety_mod",
@@ -122,10 +137,13 @@ elements.fly_pupa = {
 
 elements.crawl_fly = {
     //update 18
+    alias: "Musca Domestica",
 	color: "#5D5247",
 	excludeRandom: false,
-	behavior: [["M2%0.5","XX","M2%0.5"],["M2%1","CH:male_fly,female_fly%0.06","M2%1"],["XX","M1","XX"]],
+	behavior: [["M2%0.5 AND ST:web","XX","M2%0.5 AND ST:web"],["M2%1","CH:male_fly,female_fly%0.06","M2%1"],["ST:web","M1","ST:web"]],
 	category: "variety_mod",
+    breakInto:"slime",
+    breakIntoColor: "#D4A930",
 	state: "solid",
     reactions:{
         "disinfectant": {elem1:"mold", elem2:"dead_fly", elem3:"dirt"}
@@ -135,14 +153,18 @@ elements.crawl_fly = {
 elements.female_fruitfly = {
 //debut: update 16
     color: "#EEC758",
+    alias: "Drosophila Melanogaster",
 	excludeRandom: false,
 	behavior: [["M1%20","SW:grape,juice,fruit_milk,banana,mashed_banana,rotten_banana,dirt,mold%10","M1%20"],["M1%20","CH:female_fruitfly>dead_fly%0.01","M1%20"],["M1%20","CR:fruitfly_egg%0.06","M1%20"]],
 	category: "variety_mod",
 	state: "solid",
-	breakInto: "dead_fly",
+	breakInto: ["dead_fly","fruitfly_egg"],
 	reactions: {
 		"disinfectant": { elem1: "dead_fly", elem2: "dead_fly", elem3: "stench"},
 	},
+    burn: .01,
+    burnTime: 10,
+    burnInto:["dead_fly","dirt"],
 	tempHigh: 100,
 	stateHigh:"dead_fly",
 	tempLow: 10,
@@ -152,10 +174,14 @@ elements.female_fruitfly = {
 elements.male_fruitfly = {
 	//debut: update 16
     color: "#D4A930",
+    alias: "Drosophila Melanogaster",
 	excludeRandom: false,
 	behavior: [["M1","M2 AND SW:grape,juice,fruit_milk,banana,mashed_banana,rotten_banana,dirt,mold"%10,"M1"],["M2","CH:dead_fly%0.01","M2"],["M1","M2","M1"]],
 	category: "variety_mod",
     breakInto:"dead_bug",
+    burn: .01,
+    burnTime: 10,
+    burnInto:["dead_fly","dirt"],
 	state: "solid",
 	reactions: {
 		"disinfectant": { elem1: "dead_fly", elem2: "dead_fly"},
@@ -165,36 +191,42 @@ elements.male_fruitfly = {
 elements.fruitfly_egg = {
 	//debut: update 16
     color: "#E2EAF4",
+    alias: "Drosophila Melanogaster Egg",
 	excludeRandom: false,
-	behavior: [["XX","ST","XX"],["ST","CH:fruitfly_maggot%0.018","ST"],["M1","M1 AND ST","M1"]],
+	behavior: [["XX","ST","XX"],["ST","CH:fruitfly_larva%0.018","ST"],["M1","M1 AND ST","M1"]],
 	category: "variety_mod",
 	state: "solid",
-	breakInto: "slime,maggot,female_fruitfly",
+	breakInto: ["slime","fly_larva","female_fruitfly"],
 		reactions: {
 		"disinfectant": { elem1: "plague", elem2: "slime", elem3: "stench"},
-		"growth_Fluid": { elem1: "fruitfly_maggot", elem2: "female_fruitfly", elem3: "female_fruitfly"}
+		"growth_Serum": { elem1: "fruitfly_larva", elem2: "female_fruitfly", elem3: "female_fruitfly"}
 	}
 },
 
-elements.fruitfly_maggot = {
+elements.fruitfly_larva = {
 	//debut:update 16
     color: "#F0EEE8",
+    alias: "Drosophila Melanogaster Larva",
 	excludeRandom: false,
-	behavior: [["M2%10 AND SA%50 AND SW:grape,juice,fruit_milk,banana,mashed_banana,rotten_banana%10","SA%50","M2%10 AND SA%50 AND SW:grape,juice,fruit_milk,banana,mashed_banana,rotten_banana"],["M2%50 AND CH:cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,grape,banana,mashed_banana,rotten_banana>stench,stench,stench,plague%0.1","CH:fruitfly_pupa%0.05,CR:stench%10","M2%50 AND CH:cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,grape,banana>stench,plaque%0.1"],["M1 AND CH:banana>rotten_banana%1 AND SW:grape,juice,banana,mashed_banana,rotten_banana","M1 AND CH:cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,grape,banana>stench,plaque%0.1 AND CH:cheese,cheese_powder,melted_cheese>rotten_cheese AND CH:banana>rotten_banana,mashed_banana%0.01","M1 AND SW:grape,juice,banana,mashed_banana,rotten_banana"]],
+	behavior: [["M2%10 AND SA%50 AND SW:grape,juice,fruit_milk,banana,mashed_banana,rotten_banana%10","SA%50","M2%10 AND SA%50 AND SW:grape,juice,fruit_milk,banana,mashed_banana,rotten_banana"],["M2%50 AND CH:cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,grape,banana,mashed_banana,rotten_banana>stench,stench,stench,plague%0.1","CH:fruitfly_pupae%0.05,CR:stench%10","M2%50 AND CH:cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,grape,banana>stench,plaque%0.1"],["M1 AND CH:banana>rotten_banana%1 AND SW:grape,juice,banana,mashed_banana,rotten_banana","M1 AND CH:cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,grape,banana>stench,plaque%0.1 AND CH:cheese,cheese_powder,melted_cheese>rotten_cheese AND CH:banana>rotten_banana,mashed_banana%0.01","M1 AND SW:grape,juice,banana,mashed_banana,rotten_banana"]],
 	category: "variety_mod",
 	state: "solid",
 	breakInto: "slime",
+    breakIntoColor: "#f8f6f0",
 	tempHigh: 80,
 	stateHigh: "female_fruitfly",
 	reactions: {
 		"disinfectant": { elem1: "stench", elem2: "plague", elem3: "stench"},
-		"growth_Fluid": {elem1: "female_fruitfly", elem2: "female_fruitfly"}
+		"growth_Serum": {elem1: "female_fruitfly", elem2: "female_fruitfly"}
 	}
 },
 
-elements.fruitfly_pupa = {
+elements.fruitfly_pupae = {
     //update 18
 	color: "#CBAD91",
+    alias: "Drosophila Melanogaster pupae",
+    breakInto:"slime",
+    breakIntoColor: "#D4A930",
 	excludeRandom: false,
 	behavior: [["XX","SP","XX"],["SP","CH:crawl_fly%0.006 AND CC:#5D5247%0.01","SP"],["M1","M1","M1"]],
 	category: "variety_mod",
@@ -203,7 +235,10 @@ elements.fruitfly_pupa = {
 
 elements.crawl_fruitfly = {
     //update 18
+    alias: "Drosophila Melanogaster",
 	color: "#64571c",
+    breakInto:"slime",
+    breakIntoColor: "#D4A930",
 	excludeRandom: false,
 	behavior: [["XX","XX","XX"],["M2%2","CH:male_fly,female_fly%0.004","M2%2"],["M1","M1","M1"]],
 	category: "variety_mod",
@@ -267,15 +302,15 @@ elements.garbage = {
     //debut: update 14(failed debut: update 11)
 	color: "#4B4A4B",
 	excludeRandom: false,
-	behavior: [["XX","CR:stench%0.1","XX"],["SP%20 AND CR:garbage_juice%0.1 AND CH:water>dirty_water,garbage_juice%1","CH:maggot%0.007","SP%20 AND CR:garbage_juice%0.1 AND CH:water>dirty_water,garbage_juice%1"],["M1","M1","M1"]],
-	breakInto:"maggot",
+	behavior: [["XX","CR:stench%0.1","XX"],["SP%20 AND CR:garbage_juice%0.1 AND CH:water>dirty_water,garbage_juice%1","CH:fly_larva%0.007","SP%20 AND CR:garbage_juice%0.1 AND CH:water>dirty_water,garbage_juice%1"],["M1","M1","M1"]],
+	breakInto:"fly_larva",
     category: "variety_mod",
 	state: "solid",
     burn: .01,
     burnTime: 300,
     burnInto: "ash",
 	reactions: {
-		"fire": { elem1: "ash", elem2: "female_fly", elem3: "maggot", elem4: "fly_egg" },
+		"fire": { elem1: "ash", elem2: "female_fly", elem3: "fly_larva", elem4: "fly_egg" },
 	}
 },
 
@@ -300,6 +335,7 @@ elements.banana = {
 	category: "variety_mod",
     breakInto:["mashed_banana","juice"],
     breakIntoColor: "#D4A930",
+    isFood: true,
 	state: "solid",
 	reactions: {
 		"dirty_water": { elem1: "rotten_banana" },
@@ -310,9 +346,10 @@ elements.mashed_banana = {
     //debut:update 16
 	color: ["#FCE47D","#D4A930"],
 	excludeRandom: false,
-	behavior: [["XX","CR:juice%0.01","XX"],["ST%75","Ch:mold%0.015","ST%75"],["M1","M1","M1"]],
+	behavior: [["XX","CR:juice%0.01","XX"],["ST%75 AND M1%20","Ch:mold%0.015","ST%75 AND M1%20"],["M1","M1","M1"]],
 	category: "variety_mod",
 	state: "solid",
+    isFood:true,
     reactions: {
         "yogurt": { elem1: "yogurt" },
         "milk": {elem1: "fruit_milk"},
@@ -327,11 +364,12 @@ elements.rotten_banana = {
 	category: "variety_mod",
     breakInto:"mashed_banana",
 	state: "solid",
+    isFood:true,
 	reactions: {
 		"disinfectant": { elem1: "mold" },
         "worm": { elem1: "dirt", elem2: "mold"},
-        "maggot": { elem1: "dirt", elem2: "mold"},
-        "fruitfly_maggot": { elem1: "dirt", elem2: "mold"},
+        "fly_larva": { elem1: "dirt", elem2: "mold"},
+        "fruitfly_larva": { elem1: "dirt", elem2: "mold"},
 	}
 },
 
@@ -343,7 +381,7 @@ elements.mold = {
 	category: "variety_mod",
 	state: "solid",
 	reactions: {
-		"disinfectant": { elem1: "dirt", elem2: "fruitfly_egg", elem3: "stench", elem4: "fruitfly_maggot", elem5: "mold", elem6: "mold" },
+		"disinfectant": { elem1: "dirt", elem2: "fruitfly_egg", elem3: "stench", elem4: "fruitfly_larva", elem5: "mold", elem6: "mold" },
 	}
 },
 
@@ -542,7 +580,7 @@ elements.z_body = {
     },
 },
 
-elements.growth_Fluid = {
+elements.growth_Serum = {
     //debut: update 13
 	color: "#d1b74f",
 	excludeRandom: false,
@@ -572,10 +610,10 @@ elements.variety_mod = {
 	//debut: update 15
     color: "#ff0000",
 	excludeRandom: false,
-	behavior: [["XX","XX","XX"],["XX","CH:moss,hello_world,female_fly,male_fly,fly_egg,maggot,disinfectant,garbage_bag,garbage,garbage_juice,zombie,growth_Fluid,strange_Cell","XX"],["XX","XX","XX"]],
+	behavior: [["XX","XX","XX"],["XX","CH:moss,hello_world,female_fly,male_fly,fly_egg,fly_larva,disinfectant,garbage_bag,garbage,garbage_juice,zombie,growth_Serum,strange_Cell","XX"],["XX","XX","XX"]],
 	category: "variety_mod",
 	state: "solid",
-    related: ["moss","hello_world","female_fly","male_fly","fly_egg","maggot","fruitfly_egg","banana","mold","disinfectant","garbage_bag","garbage","garbage_juice","zombie","growth_Fluid","strange_Cell"],
+    related: ["moss","hello_world","female_fly","male_fly","fly_egg","fly_larva","fruitfly_egg","banana","mold","disinfectant","garbage_bag","garbage","garbage_juice","zombie","growth_Serum","strange_Cell"],
     cooldown: defaultCooldown
 
 };
