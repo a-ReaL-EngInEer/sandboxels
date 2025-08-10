@@ -1,3 +1,12 @@
+var modName = "mods/variety_mod.js";
+var velocityMod = "mods/velocity.js";
+var buildingMod = "mods/building.js";
+var dCount = "mods/death_count.js";
+
+if(enabledMods.includes(velocityMod) && enabledMods.includes(buildingMod)&& enabledMods.includes(dCount)) {
+	randomNumberFromOneToThree = function() {
+		return 1 + Math.floor(Math.random() * 3)
+	};
 //update 0: Variety Mod!
 //update 1: First Update!
 //update 2: Moss Update
@@ -20,6 +29,8 @@
 //update 18: Updated Flies!
 //update 19: Creepy Crawlies AND Rot
 //update 20: Chess in Sandboxels?
+//update 21: Banana Growth
+//update 22: Nature And Artificial
 var chess = ["chess_knight","chess_pawn","chess_rook","chess_queen","chess_bishop"];
 elements.moss = {
     //debut: update 2
@@ -30,7 +41,7 @@ elements.moss = {
     ["SA AND CL%0.2","XX","SA AND CL%0.2"],
     ["CL%0.2","M1 AND SA","CL%0.2"]
 ],
-category: "variety_mod",
+category: "variety_mod-nature",
 state: "solid",
 tempHigh: 55,
 stateHigh: "grass",
@@ -44,7 +55,7 @@ elements.hello_world = {
     desc:"If you see this, just know the upload worked, and you can use the Variety Mod!",
 	excludeRandom: false,
 	behavior: [["XX","SP","XX"],["SP","CH:random%0.1","SP"],["M1","M1","M1"]],
-	category: "land",
+	category: "variety_mod",
 	state: "solid",
 	reactions: {
 		"water": { elem1: "male_fly", elem2: "female_fly", elem3: "fly_egg", elem4: "fly_larva" },
@@ -57,11 +68,12 @@ elements.female_fly = {
     color: "#474f48",
 	excludeRandom: false,
 	behavior: [["M1%20 AND ST:web","XX","M1%20 AND ST:web"],["M1%20 AND ST:web","CH:female_fly>dead_insect%0.01 AND CH:crawl_female_fly%0.06","M1%20 AND ST:web"],["M1%20 AND ST:web","CR:fly_egg%0.06 AND ST:web AND CH:meat,rotten_meat,fat,broth,grease>undefined,fly_egg%0.1","M1%20 AND ST:web"]],
-	category: "variety_mod",
+	category: "variety_mod-nature",
 	state: "solid",
 	breakInto: "dead_insect",
 	reactions: {
 		"disinfectant": { elem1: "dead_insect", elem2: "ammonia", elem3: "stench"},
+        "web": { elem1:"dead_insect"}
 	},
     density:35,
     burn: .01,
@@ -79,7 +91,7 @@ elements.male_fly = {
     color: "#4B4B4B",
 	excludeRandom: false,
 	behavior: [["M1 AND ST:web","M2 AND ST:web","M1 AND ST:web"],["M2 AND ST:web","CH:dead_insect%0.01 AND CH:crawl_male_fly%0.06","M2 AND ST:web"],["M1 AND ST:web","M2 AND ST:web AND CH:meat,rotten_meat,fat,broth,grease>undefined","M1 AND ST:web"]],
-	category: "variety_mod",
+	category: "variety_mod-nature",
     breakInto:"slime",
     breakIntoColor: "#D4A930",
 	state: "solid",
@@ -89,6 +101,7 @@ elements.male_fly = {
     burnInto: ["dead_insect","dirt"],
 	reactions: {
 		"disinfectant": { elem1: "dead_insect", elem2: "dead_insect"},
+        "web": { elem1:"dead_insect"}
 	}
 },
 
@@ -97,7 +110,7 @@ elements.fly_egg = {
     color: "#E2EAF4",
 	excludeRandom: false,
 	behavior: [["XX","ST","XX"],["ST","CH:fly_larva%0.036","ST"],["M1","M1 AND ST","M1"]],
-	category: "variety_mod",
+	category: "variety_mod-nature",
 	state: "solid",
 	breakInto: ["slime","fly_larva","female_fly"],
 		reactions: {
@@ -112,7 +125,7 @@ elements.fly_larva = {
     alias: "Lucilia sericata Larva",
 	excludeRandom: false,
 	behavior: [["M2%10 AND SA%50","SA%50 AND SW: fly_larva,fly_egg,meat,rotten_meat,infested_meat%0.1","M2%10 AND SA%50"],["M2%50 AND CH:meat,rotten_meat,infested_meat,cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,garbage_juice,banana,mashed_banana,rotten_banana>stench,stench,stench,plague%0.1 AND CH:meat,rotten_meat,fat,broth,grease>undefined","CC: #F9E6D4%0.08 AND CH:fly_pupae%0.05,CR:stench%10","M2%50 AND CH:meat,rotten_meat,infested_meat,cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,banana,mashed_banana,rotten_banana>stench,plaque%0.1 AND CH:meat,rotten_meat,fat,broth,grease>undefined"],["M1 AND CH:meat>rotten_meat%1","M1 AND CH:meat,rotten_meat,infested_meat,cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,>stench,plaque AND CH:cheese,cheese_powder,melted_cheese>rotten_cheese AND CH:meat,rotten_meat,fat,broth,grease>undefined","M1"]],
-	category: "variety_mod",
+	category: "variety_mod-nature",
 	state: "solid",
 	breakInto: "slime",
     breakIntoColor: "#f1efe9",
@@ -133,7 +146,7 @@ elements.fly_pupae = {
     breakIntoColor: "#D4A930",
 	excludeRandom: false,
 	behavior: [["XX","SP","XX"],["SP","CH:crawl_male_fly,crawl_female_fly%0.006 AND CC:#5D5247%0.01","SP"],["M1","M1","M1"]],
-	category: "variety_mod",
+	category: "variety_mod-nature",
     density: 80,
 	state: "solid",
     reactions:{
@@ -147,7 +160,7 @@ elements.crawl_male_fly = {
 	color: "#5D5247",
 	excludeRandom: false,
 	behavior: [["M2%0.5 AND ST:web","XX","M2%0.5 AND ST:web"],["M2%1 AND CH:meat,rotten_meat,fat,broth,grease>undefined","CH:male_fly%0.06","M2%1 AND CH:meat,rotten_meat,fat,broth,grease>undefined"],["ST:web","M1 AND CH:meat,rotten_meat,fat,broth,grease>undefined","ST:web"]],
-	category: "variety_mod",
+	category: "variety_mod-nature",
     breakInto:"slime",
     breakIntoColor: "#D4A930",
     density:30,
@@ -163,7 +176,7 @@ elements.crawl_female_fly = {
 	color: "#5D5247",
 	excludeRandom: false,
 	behavior: [["M2%0.5 AND ST:web","XX","M2%0.5 AND ST:web"],["M2%1 AND CH:meat,rotten_meat,fat,broth,grease>undefined AND CR:fly_egg%0.01","CH:female_fly%0.06","M2%1 AND CH:meat,rotten_meat,fat,broth,grease>undefined AND CR:fly_egg%0.1"],["ST:web","M1 AND CH:meat,rotten_meat,fat,broth,grease>undefined","ST:web"]],
-	category: "variety_mod",
+	category: "variety_mod-nature",
     breakInto:"slime",
     breakIntoColor: "#D4A930",
 	state: "solid",
@@ -177,7 +190,7 @@ elements.female_fruitfly = {
     alias: "Drosophila Melanogaster",
 	excludeRandom: false,
 	behavior: [["M1%20","SW:grape,juice,fruit_milk,banana,mashed_banana,rotten_banana,dirt,mold%10","M1%20"],["M1%20","CH:female_fruitfly>dead_insect%0.01","M1%20"],["M1%20","CR:fruitfly_egg%0.06","M1%20"]],
-	category: "variety_mod",
+	category: "variety_mod-nature",
 	state: "solid",
 	breakInto: ["dead_insect","fruitfly_egg"],
 	reactions: {
@@ -197,8 +210,8 @@ elements.male_fruitfly = {
     color: "#D4A930",
     alias: "Drosophila Melanogaster",
 	excludeRandom: false,
-	behavior: [["M1","M2 AND SW:grape,juice,fruit_milk,banana,mashed_banana,rotten_banana,dirt,mold"%10,"M1"],["M2","CH:dead_insect%0.01","M2"],["M1","M2","M1"]],
-	category: "variety_mod",
+	behavior: [["M1","M2 AND SW:grape,juice,fruit_milk,banana,mashed_banana,rotten_banana,dirt,mold%10","M1"],["M2","CH:dead_insect%0.01","M2"],["M1","M2","M1"]],
+	category: "variety_mod-nature",
     breakInto:"dead_bug",
     burn: .01,
     burnTime: 10,
@@ -215,7 +228,7 @@ elements.fruitfly_egg = {
     alias: "Drosophila Melanogaster Egg",
 	excludeRandom: false,
 	behavior: [["XX","ST","XX"],["ST","CH:fruitfly_larva%0.018","ST"],["M1","M1 AND ST","M1"]],
-	category: "variety_mod",
+	category: "variety_mod-nature",
 	state: "solid",
 	breakInto: ["slime","fly_larva","female_fruitfly"],
 		reactions: {
@@ -230,7 +243,7 @@ elements.fruitfly_larva = {
     alias: "Drosophila Melanogaster Larva",
 	excludeRandom: false,
 	behavior: [["M2%10 AND SA%50 AND SW:grape,juice,fruit_milk,banana,mashed_banana,rotten_banana%10","SA%50","M2%10 AND SA%50 AND SW:grape,juice,fruit_milk,banana,mashed_banana,rotten_banana"],["M2%50 AND CH:cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,grape,banana,mashed_banana,rotten_banana>stench,stench,stench,plague%0.1","CH:fruitfly_pupae%0.05,CR:stench%10","M2%50 AND CH:cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,grape,banana>stench,plaque%0.1"],["M1 AND CH:banana>rotten_banana%1 AND SW:grape,juice,banana,mashed_banana,rotten_banana","M1 AND CH:cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,grape,banana>stench,plaque%0.1 AND CH:cheese,cheese_powder,melted_cheese>rotten_cheese AND CH:banana>rotten_banana,mashed_banana%0.01","M1 AND SW:grape,juice,banana,mashed_banana,rotten_banana"]],
-	category: "variety_mod",
+	category: "variety_mod-nature",
 	state: "solid",
 	breakInto: "slime",
     breakIntoColor: "#f8f6f0",
@@ -250,7 +263,7 @@ elements.fruitfly_pupae = {
     breakIntoColor: "#D4A930",
 	excludeRandom: false,
 	behavior: [["XX","SP","XX"],["SP","CH:crawl_fly%0.006 AND CC:#5D5247%0.01","SP"],["M1","M1","M1"]],
-	category: "variety_mod",
+	category: "variety_mod-nature",
 	state: "solid"
 },
 
@@ -262,9 +275,86 @@ elements.crawl_fruitfly = {
     breakIntoColor: "#D4A930",
 	excludeRandom: false,
 	behavior: [["XX","XX","XX"],["M2%2","CH:male_fly,female_fly%0.004","M2%2"],["M1","M1","M1"]],
-	category: "variety_mod",
+	category: "variety_mod-nature",
 	state: "solid",
 
+},
+
+elements.worker_leafcutter_ant = {
+    //update 21
+    alias: "Atta Cephalotes",
+	color: "#7b370c",
+    desc:"This species of ant is special because it can farm mushrooms and leaves, and turn them into ant bread.",
+	excludeRandom: false,
+	behavior: [["ST:web","SW:ant_wall%5 AND M2%5","ST:web"],["M2 AND CH:grape,banana,mashed_banana,rotten_banana,juice,yeast>undefined%2%2 AND SW:dirt,sand,ant_wall%2 AND CH:dirt,sand>mushroom_spore%0.01","CH:dead_insect%0.006","M2 AND Ch:dirt,sand>mushroom_spore%0.1 AND CH:grape,banana,mashed_banana,rotten_banana,juice,yeast>undefined%2%2 AND SW:ant_wall%5"],["ST:web AND M2%75 AND Ch:dirt,sand,ant_wall,ant_wall,ant_wall>sand,sand,ant_wall AND CH:plant,mushroom_spore,mushroom_stalk,mushroom_gill,mushroom_cap,hyphae,lichen,mycelium,corn_seed,flower_seed,grass_seed,pumpkin_seed,wheat_seed,potato_seed,yeast,fertilized_banana_seed>bread,crumb,undefined,yeast","M1 AND CH:meat,rotten_meat,fat,broth,grease>undefined AND CH:dirt,sand>undefined,ant_wall,ant_wall AND CH:plant,mushroom_spore,mushroom_stalk,mushroom_gill,mushroom_cap,hyphae,lichen,mycelium,corn_seed,flower_seed,grass_seed,pumpkin_seed,wheat_seed,potato_seed>bread,crumb,undefined AND SW:ant_wall%5","ST:M2%75 AND CH:dirt,sand>undefined,ant_wall,ant_wall AND CH:mushroom_spore,mushroom_stalk,mushroom_gill,mushroom_cap,hyphae,lichen,mycelium,corn_seed,flower_seed,grass_seed,pumpkin_seed,wheat_seed,potato_seed>bread,crumb,undefined"]],
+	category: "variety_mod-nature",
+    breakInto:"dead_insect",
+    density:30,
+	state: "solid",
+    reactions:{
+        "disinfectant": {elem1:"mold", elem2:"dead_insect", elem3:"dirt"}
+    }
+},
+
+elements.queen_leafcutter_ant = {
+    //update 21
+    alias: "Atta Cephalotes",
+	color: "#9f3e06",
+    desc:"This species of ant is special because it can farm mushrooms and leaves, and turn them into ant bread.",
+	excludeRandom: false,
+	behavior: [["ST:web","SW:ant_wall%5 AND M2%5","ST:web"],["M2%2 AND CH:grape,banana,mashed_banana,rotten_banana,juice,yeast>undefined%2 AND SW:dirt,sand,ant_wall%2","CH:dead_insect%0.006 AND SW:ant_wall%5","M2%2 AND CH:grape,banana,mashed_banana,rotten_banana,juice,yeast>undefined%2 AND SW:ant_wall%5"],["ST:web AND M2%75 AND CH:plant,mushroom_spore,mushroom_stalk,mushroom_gill,mushroom_cap,hyphae,lichen,mycelium,corn_seed,flower_seed,grass_seed,pumpkin_seed,wheat_seed,potato_seed,yeast,fertilized_banana_seed>bread,crumb,undefined,yeast","M1 AND CH:meat,rotten_meat,fat,broth,grease>undefined AND CH:plant,mushroom_spore,mushroom_stalk,mushroom_gill,mushroom_cap,hyphae,lichen,mycelium,corn_seed,flower_seed,grass_seed,pumpkin_seed,wheat_seed,potato_seed>bread,crumb,undefined AND CH:bread,crumb,yeast>leafcutter_ant_egg AND SW:ant_wall%5","ST:M2%75 AND CH:mushroom_spore,mushroom_stalk,mushroom_gill,mushroom_cap,hyphae,lichen,mycelium,corn_seed,flower_seed,grass_seed,pumpkin_seed,wheat_seed,potato_seed>bread,crumb,undefined"]],
+	category: "variety_mod-nature",
+    breakInto:"dead_insect",
+    density:30,
+	state: "solid",
+    reactions:{
+        "disinfectant": {elem1:"mold", elem2:"dead_insect", elem3:"dirt"}
+    }
+},
+
+elements.leafcutter_ant_egg = {
+	//debut: update 16
+    color: "#E2EAF4",
+    alias: "Atta Cephalotes Egg",
+	excludeRandom: false,
+	behavior: [["XX","ST","XX"],["ST","CH:leafcutter_ant_larva%0.018","ST"],["M1","M1 AND ST","M1"]],
+	category: "variety_mod-nature",
+	state: "solid",
+	breakInto: ["slime","fly_larva","female_fruitfly"],
+		reactions: {
+		"disinfectant": { elem1: "plague", elem2: "stench", elem3: "stench"},
+		"growth_Serum": { elem1: "leafcutter_ant_larva", elem2: "worker_leafcutter_ant", elem3: "queen_leafcutter_ant"}
+	},
+},
+
+elements.leafcutter_ant_larva = {
+	//debut:update 16
+    color: "#FAEFE9",
+    alias: "Atta Cephalotes Larva",
+	excludeRandom: false,
+	behavior: [["M2%10 AND SA%50 AND SW:grape,juice,fruit_milk,banana,mashed_banana,rotten_banana,ant_wall%10","SA%50","M2%10 AND SA%50 AND SW:grape,juice,fruit_milk,banana,mashed_banana,rotten_banana,ant_wall"],["M2%50 AND CH:cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,grape,banana,mashed_banana,rotten_banana>stench,stench,rot%0.1 AND CH:plant,mushroom_spore,mushroom_stalk,mushroom_gill,mushroom_cap,hyphae,lichen,mycelium,corn_seed,flower_seed,grass_seed,pumpkin_seed,wheat_seed,potato_seed,yeast,fertilized_banana_seed>bread,crumb,undefined,yeast","CH:leafcutter_ant_pupae%0.05,CR:stench%10","M2%50 AND CH:cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,grape,banana>stench,plaque%0.1 AND CH:plant,mushroom_spore,mushroom_stalk,mushroom_gill,mushroom_cap,hyphae,lichen,mycelium,corn_seed,flower_seed,grass_seed,pumpkin_seed,wheat_seed,potato_seed,yeast,fertilized_banana_seed>bread,crumb,undefined,yeast"],["M1%1 AND CH:banana>undefined%1 AND CH:plant,mushroom_spore,mushroom_stalk,mushroom_gill,mushroom_cap,hyphae,lichen,mycelium,corn_seed,flower_seed,grass_seed,pumpkin_seed,wheat_seed,potato_seed,yeast,fertilized_banana_seed>bread,crumb,undefined,yeast AND CH:bread,yeast>undefined%10 AND SW:grape,juice,banana,mashed_banana,rotten_banana","M1 AND CH:bread,yeast>undefined%10 AND CH:cheese,melted_cheese,cheese_powder,rotten_cheese,bread,crumb,toast,grape,banana>stench,plaque%0.1 AND CH:plant,mushroom_spore,mushroom_stalk,mushroom_gill,mushroom_cap,hyphae,lichen,mycelium,corn_seed,flower_seed,grass_seed,pumpkin_seed,wheat_seed,potato_seed,yeast,fertilized_banana_seed>bread,crumb,undefined,yeast AND CH:cheese,cheese_powder,melted_cheese>rotten_cheese AND CH:banana>rotten_banana,mashed_banana%0.01","M1%1 AND CH:bread,yeast>undefined%10 AND SW:grape,juice,banana,mashed_banana,rotten_banana"]],
+	category: "variety_mod-nature",
+	state: "solid",
+	breakInto: "slime",
+    breakIntoColor: "#f8f6f0",
+	tempHigh: 80,
+	stateHigh: "worker_leafcutter_ant",
+	reactions: {
+		"disinfectant": { elem1: "stench", elem2: "plague", elem3: "stench"},
+		"growth_Serum": {elem1: "worker_leafcutter_ant", elem2: "leafcutter_ant_pupae"}
+	}
+},
+
+elements.leafcutter_ant_pupae = {
+    //update 18
+	color: "#b95c3d",
+    alias: "Atta Cephalotes pupae",
+    breakInto:"slime",
+    breakIntoColor: "#d46f30ff",
+	excludeRandom: false,
+	behavior: [["XX","SP","XX"],["SP","CH:worker_leafcutter_ant%0.006 AND CC:#903e22%0.01","SP"],["M1","M1","M1"]],
+	category: "variety_mod-nature",
+	state: "solid"
 },
 
 elements.dead_insect = {
@@ -272,7 +362,7 @@ elements.dead_insect = {
 	color: "#4B4A4B",
 	excludeRandom: false,
 	behavior: [["XX","XX","XX"],["XX","CH:dirt%0.1","XX"],["M1","M1 AND SA","M1"]],
-	category: "variety_mod",
+	category: "variety_mod-nature",
 	state: "solid",
     density: 90,
 	reactions: {
@@ -287,7 +377,7 @@ elements.disinfectant = {
     color: "#E2EAF4",
 	excludeRandom: false,
 	behavior: behaviors.FOAM,
-	category: "variety_mod",
+	category: "variety_mod-nature",
 	state: "gas",
 	stain: -1,
     density: 80,
@@ -297,12 +387,12 @@ elements.disinfectant = {
 };
 
 elements.infested_meat = {
-    //update1 19
+    //update 19
     color: ["#c5b880","#b8b165","#b89765"], 
 	excludeRandom: false,
 	desc:"I HATE ROTTEN_MEAT ITS JUST A MESS!!! JUST USE INFESTED_MEAT INSTEADDD!!!! ITS NOT MESSY AT ALLLLLL!!!!11",
     behavior: [["XX","SP AND CR:mushroom_spore,mushroom_gill,mold,mold,mold,mushroom_spore%0.0175 AND CR:male_fly,fly_larva,fly_pupa%0.0047","XX"],["SP","CH:mushroom_spore,fly_larva,fly_egg%0.01","SP"],["XX","M1","XX"]],
-	category: "variety_mod",
+	category: "variety_mod-nature",
 	state: "solid",
 	reactions: {
 		"disinfectant": { elem1: "mushroom_spore", elem2: "female_fly", elem3: "mold", elem4: "dirt", elem5: "rot" },
@@ -314,9 +404,9 @@ elements.rot = {
     color: ["#637865","#6AB066","#3EA346"],
 	excludeRandom: false,
 	behavior: [["M1 AND CH:head,body>blood,antibody,infection,rotten_meat,cooked_meat,infested_meat,zombie,bone,bone_marrow,skin,plague,stench,liquid_stench AND CH:skin,head,bodyrat,bird,fish,meat,rotten_meat,cured_meat,cooked_meat>infested_meat,mold,mushroom_spore AND CH:banana,mashed_banana>rotten_banana,mold AND CH: cheese,melted_cheese,cheese_powder>rotten_cheese,mold,dirt AND CH:water,salt_water,sugar_water,seltzer,acid,neutral_acid>neutral_acid,stench,plaque,liquid_stench,liquid_stench,liquid_stench,liquid_stench AND CH:fly>crawl_male_fly, crawl_female_fly","M1 AND CH:head,body>blood,antibody,infection,rotten_meat,cooked_meat,infested_meat,zombie,bone,bone_marrow,skin,plague,stench,liquid_stench AND CH:skin,head,bodyrat,bird,fish,meat,rotten_meat,cured_meat,cooked_meat>infested_meat,mold,mushroom_spore AND CH:banana,mashed_banana>rotten_banana,mold AND CH: cheese,melted_cheese,cheese_powder>rotten_cheese,mold,dirt AND CH:water,salt_water,sugar_water,seltzer,acid,neutral_acid>neutral_acid,stench,plaque,liquid_stench,liquid_stench,liquid_stench,liquid_stench AND CH:fly>crawl_male_fly, crawl_female_fly","M1 AND CH:head,body>blood,antibody,infection,rotten_meat,cooked_meat,infested_meat,zombie,bone,bone_marrow,skin,plague,stench,liquid_stench AND CH:skin,head,bodyrat,bird,fish,meat,rotten_meat,cured_meat,cooked_meat>infested_meat,mold,mushroom_spore AND CH:banana,mashed_banana>rotten_banana,mold AND CH: cheese,melted_cheese,cheese_powder>rotten_cheese,mold,dirt AND CH:water,salt_water,sugar_water,seltzer,acid,neutral_acid>neutral_acid,stench,plaque,liquid_stench,liquid_stench,liquid_stench,liquid_stench AND CH:fly>crawl_male_fly, crawl_female_fly"],["M1 AND CH:head,body>blood,antibody,infection,rotten_meat,cooked_meat,infested_meat,zombie,bone,bone_marrow,skin,plague,stench,liquid_stench AND CH:skin,head,bodyrat,bird,fish,meat,rotten_meat,cured_meat,cooked_meat>infested_meat,mold,mushroom_spore AND CH:banana,mashed_banana>rotten_banana,mold AND CH: cheese,melted_cheese,cheese_powder>rotten_cheese,mold,dirt AND CH:water,salt_water,sugar_water,seltzer,acid,neutral_acid>neutral_acid,stench,plaque,liquid_stench,liquid_stench,liquid_stench,liquid_stench AND CH:fly>crawl_male_fly, crawl_female_fly","DE%0.01","M1 AND CH:head,body>blood,antibody,infection,rotten_meat,cooked_meat,infested_meat,zombie,bone,bone_marrow,skin,plague,stench,liquid_stench AND CH:skin,head,bodyrat,bird,fish,meat,rotten_meat,cured_meat,cooked_meat>infested_meat,mold,mushroom_spore AND CH:banana,mashed_banana>rotten_banana,mold AND CH: cheese,melted_cheese,cheese_powder>rotten_cheese,mold,dirt AND CH:water,salt_water,sugar_water,seltzer,acid,neutral_acid>neutral_acid,stench,plaque,liquid_stench,liquid_stench,liquid_stench,liquid_stench AND CH:fly>crawl_male_fly, crawl_female_fly"],["M1 AND CH:head,body>blood,antibody,infection,rotten_meat,cooked_meat,infested_meat,zombie,bone,bone_marrow,skin,plague,stench,liquid_stench AND CH:skin,head,bodyrat,bird,fish,meat,rotten_meat,cured_meat,cooked_meat>infested_meat,mold,mushroom_spore AND CH:banana,mashed_banana>rotten_banana,mold AND CH: cheese,melted_cheese,cheese_powder>rotten_cheese,mold,dirt AND CH:water,salt_water,sugar_water,seltzer,acid,neutral_acid>neutral_acid,stench,plaque,liquid_stench,liquid_stench,liquid_stench,liquid_stench AND CH:fly>crawl_male_fly, crawl_female_fly","M1 AND CH:head,body>blood,antibody,infection,rotten_meat,cooked_meat,infested_meat,zombie,bone,bone_marrow,skin,plague,stench,liquid_stench AND CH:skin,head,bodyrat,bird,fish,meat,rotten_meat,cured_meat,cooked_meat>infested_meat,mold,mushroom_spore AND CH:banana,mashed_banana>rotten_banana,mold AND CH: cheese,melted_cheese,cheese_powder>rotten_cheese,mold,dirt AND CH:water,salt_water,sugar_water,seltzer,acid,neutral_acid>neutral_acid,stench,plaque,liquid_stench,liquid_stench,liquid_stench,liquid_stench AND CH:fly>crawl_male_fly, crawl_female_fly","M1 AND CH:head,body>blood,antibody,infection,rotten_meat,cooked_meat,infested_meat,zombie,bone,bone_marrow,skin,plague,stench,liquid_stench AND CH:skin,head,bodyrat,bird,fish,meat,rotten_meat,cured_meat,cooked_meat>infested_meat,mold,mushroom_spore AND CH:banana,mashed_banana>rotten_banana,mold AND CH: cheese,melted_cheese,cheese_powder>rotten_cheese,mold,dirt AND CH:water,salt_water,sugar_water,seltzer,acid,neutral_acid>neutral_acid,stench,plaque,liquid_stench,liquid_stench,liquid_stench,liquid_stench AND CH:fly>crawl_male_fly, crawl_female_fly"]],
-	category: "variety_mod",
+	category: "variety_mod-nature",
 	state: "gas",
-	stain: -1,
+	stain: 1,
     density: 80,
 	reactions: {
 		"water": { elem1: "stench", elem2: "liquid_stench"}
@@ -326,9 +416,10 @@ elements.rot = {
 elements.stench_nuke = {
 	color: "#548984",
 	excludeRandom: false,
-	behavior: [["XX","XX","XX"],["XX","EX:8>stench,liquid_stench,rad_cloud,rot%0.01","XX"],["XX","M1 AND EX:8>stench,liquid_stench,rad_cloud,rot","XX"]],
+	behavior: [["XX","XX","XX"],["XX","EX:24>stench,liquid_stench,rad_cloud,rot,explosion,explosion,explosion,explosion,explosion,explosion,stench,stench,stench,stench%0.01","XX"],["XX","M1 AND EX:8>stench,liquid_stench,rad_cloud,rot","XX"]],
 	category: "variety_mod",
 	state: "solid",
+    cooldown: defaultCooldown,
 	reactions: {
 		"water": { elem1: "liquid_stench", elem2: "acid", elem3: "neutral_acid", elem4: "stench" },
 	}
@@ -387,7 +478,7 @@ elements.garbage_juice = {
     stain:0.125,
     density: 977,
     conduct: 0.8,
-    category: "variety_mod",
+    category: "variety_mod-nature",
 	state: "liquid",
     reactions: {
 		"disinfectant": { elem1: "dirty_water", elem2: "stench"},
@@ -398,10 +489,10 @@ elements.banana = {
     //debut:update 16
 	color: ["#FCE47D","#EEC758"],
 	excludeRandom: false,
-	behavior: [["XX","ST:vine","XX"],["ST:vine","CH:rotten_banana%0.005","ST:vine"],["M2 AND ","M1","M2"]],
-	category: "variety_mod",
-    breakInto:["mashed_banana","juice"],
-    breakIntoColor: "#D4A930",
+	behavior: [["ST:banana_leaf,banana_penducle_2,banana_peduncle_1%70","ST:banana_leaf,banana_penducle_2,banana_peduncle_1","ST:banana_leaf,banana_penducle_2,banana_peduncle_1"],["ST:banana_leaf,banana_penducle_2,banana_peduncle_1","CH:rotten_banana%0.005","ST:banana_leaf,banana_penducle_2,banana_peduncle_1"],["M2","M1","M2"]],
+	category: "variety_mod-nature",
+    breakInto:["mashed_banana","juice","fertilized_banana_seed"],
+    breakIntoColor: "#D4A930", 
     isFood: true,
 	state: "solid",
 	reactions: {
@@ -414,11 +505,25 @@ elements.mashed_banana = {
 	color: ["#FCE47D","#D4A930"],
 	excludeRandom: false,
 	behavior: [["XX","CR:juice%0.01","XX"],["ST%75 AND M1%20","Ch:mold%0.015","ST%75 AND M1%20"],["M1","M1","M1"]],
-	category: "variety_mod",
+	category: "variety_mod-nature",
 	state: "solid",
     isFood:true,
     reactions: {
         "yogurt": { elem1: "yogurt" },
+        "milk": {elem1: "fruit_milk"},
+    }
+},
+
+elements.banana_seed = {
+    //debut:update 16
+	color: ["#5f5d53","#423924"],
+	excludeRandom: false,
+	behavior: [["XX","XX","XX"],["XX","Ch:mold,fertilized_banana_seed%0.0015","XX"],["M2%1","M1","M2%1"]],
+	category: "variety_mod-nature",
+	state: "solid",
+    isFood:true,
+    reactions: {
+        "growth_Serum": { elem1: "fertilized_banana_seed" },
         "milk": {elem1: "fruit_milk"},
     }
 },
@@ -428,15 +533,137 @@ elements.rotten_banana = {
 	color: ["#7e7c29","#64571c","#4a3e16"],
 	excludeRandom: false,
 	behavior: [["XX","ST:vine AND CR:juice%0.01 AND CR:fly_egg,fruitfly_egg%0.0085 AND SP","XX"],["ST:vine AND SP","CH:dirt%0.1","ST:vine AND SP"],["M2","M1","M2"]],
-	category: "variety_mod",
+	category: "variety_mod-nature",
     breakInto:"mashed_banana",
 	state: "solid",
     isFood:true,
 	reactions: {
-		"disinfectant": { elem1: "mold" },
-        "worm": { elem1: "dirt", elem2: "mold"},
+		"disinfectant": { elem1: "fertilized_banana_seed" },
+        "worm": { elem1: "fertilized_banana_seed", elem2: "mold"},
         "fly_larva": { elem1: "dirt", elem2: "mold"},
         "fruitfly_larva": { elem1: "dirt", elem2: "mold"},
+	}
+},
+
+elements.fertilized_banana_seed = {
+    //update 21
+	color: "#4d4a3b",
+	excludeRandom: false,
+	behavior: [
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|SW:banana_pseudostem AND CR:banana_pseudostem%1|XX|XX`,
+        `XX|XX|LB:banana_pseudostem AND CH:banana_plant_top%0.05|XX|XX`,
+        `XX|XX|CH:dirt>root,fiber|XX|XX`,
+        `XX|XX|CH:dirt>root,fiber|XX|XX`,
+        `XX|CH:dirt>root,fiber|CH:dirt>root,fiber|CH:dirt>root,fiber|XX`
+    ],
+	category: "variety_mod-nature",
+	state: "solid",
+	reactions: {
+		"water": { elem1: "fertilized_banana_seed", elem2: "fertilized_banana_seed", elem3: "mold", elem4: "fertilized_banana_seed" },
+	}
+},
+
+elements.banana_pseudostem = {
+    //update 21
+	color: ["#afb845","#a7dc6b","#b4be44"],
+	excludeRandom: false,
+	behavior: [
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|XX|XX|XX`,
+        `XX|CR:banana_peduncle_1%0.5|CH:dirt%0.001|CR:banana_peduncle_1%0.5|XX`,
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|XX|XX|XX`
+    ],
+	category: "variety_mod-nature",
+	state: "solid",
+    breakInto:"sap,juice",
+    breakIntoColor:"#f2e477",
+},
+
+elements.banana_plant_top = {
+    //update 21
+	color: ["#e5f56c"],
+	excludeRandom: false,
+	behavior: [
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|XX|XX|XX`,
+        `XX|CR:banana_leaf%0.5|CH:dirt%0.001|CR:banana_leaf%0.5|XX`,
+        `CR:banana_leaf%0.5|CR:banana%0.01|XX|CR:banana0.01|CR:banana_leaf%0.5`,
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|XX|XX|XX`
+    ],
+	category: "variety_mod-nature",
+	state: "solid",
+    breakInto:"sap,juice",
+    breakIntoColor:"#f2e477",
+},
+
+elements.banana_leaf = {
+	color: ["#8cb845","#addc6b","#a0be44"],
+	excludeRandom: false,
+	behavior: [
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|XX|XX|XX`,
+        `XX|SA:banana_leaf|XX|SA:banana_leaf|XX`,
+        `XX|SA:banana_leaf|CH:fertilized_banana_seed%0.001|SA:banana_leaf|XX`,
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|XX|XX|XX`
+    ],
+	category: "variety_mod-nature",
+	state: "solid",
+    breakInto:"sap,juice",
+    breakIntoColor:"#f2e477",
+	reactions: {
+		"water": { elem1: "fertilized_banana_seed", elem2: "fertilized_banana_seed", elem3: "mold", elem4: "fertilized_banana_seed" },
+	}
+},
+
+elements.banana_peduncle_1 = {
+    //update 21
+	color: ["#d7eb42","#e5f56c","#a0be44"],
+    name:"banana_peduncle-offshoot",
+	excludeRandom: false,
+	behavior: [
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|XX|XX|XX`,
+        `XX|CR:banana_peduncle_1,banana_peduncle_2%0.5|CH:dirt%0.001|CR:banana_peduncle_1,banana_peduncle_2%0.5|XX`,
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|XX|XX|XX`
+    ],
+	category: "variety_mod-nature",
+	state: "solid",
+    breakInto:"sap,juice",
+    breakIntoColor:"#f2e477",
+},
+
+elements.banana_peduncle_2 = {
+    //update 21
+	color: ["#8cb845","#addc6b","#a0be44"],
+    name:"banana_peduncle-hanging",
+	excludeRandom: false,
+	behavior: [
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|XX|XX|XX`,
+        `XX|CR:banana%0.5|CH:dirt,fertilized_banana_seed%0.001|CR:banana%0.5|XX`,
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|XX|XX|XX`,
+        `XX|XX|XX|XX|XX`
+    ],
+	category: "variety_mod-nature",
+	state: "solid",
+    breakInto:"sap,juice,fertilized_banana_seed",
+    breakIntoColor:"#f2e477",
+	reactions: {
+		"water": { elem1: "fertilized_banana_seed", elem2: "fertilized_banana_seed", elem3: "mold", elem4: "fertilized_banana_seed" },
 	}
 },
 
@@ -445,7 +672,7 @@ elements.mold = {
 	color: ["#6B7A1A", "#60742E", "#5E823C"],
 	excludeRandom: false,
 	behavior: [["CH:rotten_meat,rotten_cheese,rotten_banana>mold%0.07","SP","CH:rotten_meat,rotten_cheese,rotten_banana>mold%0.07"],["CH:rotten_meat,rotten_cheese,rotten_banana>mold%0.07","CH:dirt%0.001","CH:rotten_meat,rotten_cheese,rotten_banana>mold%0.07"],["M1 AND CH:rotten_meat,rotten_cheese,rotten_banana>mold%0.07","M1","M1 AND CH:rotten_meat,rotten_cheese,rotten_banana>mold%0.07"]],
-	category: "variety_mod",
+	category: "variety_mod-nature",
 	state: "solid",
 	reactions: {
 		"disinfectant": { elem1: "dirt", elem2: "fruitfly_egg", elem3: "stench", elem4: "fruitfly_larva", elem5: "mold", elem6: "mold" },
@@ -456,7 +683,7 @@ elements.zombie = {
     //debut: update 9
 	hidden: false,
     color: ["#75816B","#4D6B53"],
-    category: "variety_mod",
+    category: "variety_mod-nature",
     properties: {
         dead: false,
         dir: 1,
@@ -484,7 +711,7 @@ elements.z_head = {
     //debut: update 9
     hidden: true,
 	color: ["#75816B","#4D6B53"],
-    category: "variety_mod",
+    category: "variety_mod-nature",
 	breakInto: ["rotten_meat","bone","bone","blood"],
 	properties: {
         dead: false
@@ -543,7 +770,7 @@ elements.z_body = {
     //debut: update 9
     hidden: true,
 	color: ["#5DE2E7","#047e99","#7f5fb0"],
-    category: "variety_mod",
+    category: "variety_mod-nature",
 	 breakInto: ["rotten_meat","rotten_meat","bone","blood"],
 	 properties: {
         dead: false,
@@ -703,8 +930,8 @@ elements.chess_knight = {
 elements.bug = {
 	color: "#FFFFFF",
 	excludeRandom: false,
-	behavior: [["XX","XX","XX"],["XX","CH:male_fly, crawl_male_fly, female_fly, crawl_female_fly, fly_pupa","XX"],["XX","XX","XX"]],
-	category: "variety_mod",
+	behavior: [["XX","XX","XX"],["XX","CH:male_fly,crawl_male_fly,female_fly,male_fruitfly,crawl_female_fly,fly_pupa,female_fruitfly,worker_leafcutter_ant,queen_leafcuttter_ant","XX"],["XX","XX","XX"]],
+	category: "variety_mod-nature",
 	state: "solid",
 	
 },
@@ -717,11 +944,20 @@ worldgentypes.insect_ecosystem = {
         [0, "basalt"],
     ],
     decor: [ // [element, chance, distance from top]
-        ["ant", 0.08],
+        ["bee", 0.08],
         ["bug", 0.08],
         ["bird", 0.025, 10],
-        ["mushroom_spore", 0.012, 10],
-        [["sapling","pinecone"], 0.02, 10]
+        ["mushroom_spore", 0.02, 10],
+        ["fertilized_banana_seed", 0.02, 10],
+        ["flower_seed", 0.02, 10],
+        ["tuff", 0]
     ],
-    baseHeight: 0.25,
+    baseHeight: 0.5,
 }
+
+} else {
+	enabledMods.splice(enabledMods.indexOf(modName),0,velocityMod);
+	enabledMods.splice(enabledMods.indexOf(modName),0,buildingMod);
+	localStorage.setItem("enabledMods", JSON.stringify(enabledMods));
+	alert(`The ${velocityMod} mod and ${buildingMod} mods are required and have been automatically inserted (reload for this to take effect).`);
+};
